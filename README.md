@@ -1,6 +1,6 @@
 <div align="center">
 
-![What If — Explore the realities that could have been](./docs/assets/what-if-banner.png)
+<img src="./docs/assets/what-if-banner.png" alt="What If — Explore the realities that could have been" width="100%" />
 
 </div>
 
