@@ -1,11 +1,5 @@
 <div align="center">
 
-<div align="center">
-
-<img src="./docs/assets/what-if-banner.png" alt="What If — Explore the realities that could have been" width="85%" />
-
-</div>
-
 # WHAT IF
 
 ### Explore the realities that could have been.
@@ -23,6 +17,12 @@ Discover what could happen next.
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-0F172A?style=flat-square\&logo=mongodb\&logoColor=white)
 ![OpenAI](https://img.shields.io/badge/AI-OpenAI-0F172A?style=flat-square\&logo=openai\&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-MVP-7C3AED?style=flat-square)
+
+<div align="center">
+
+<img src="./docs/assets/what-if-banner.png" alt="What If — Explore the realities that could have been" width="85%" />
+
+</div>
 
 </div>
 
