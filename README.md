@@ -1,12 +1,10 @@
 <div align="center">
 
-<img src="./docs/assets/what-if-banner.png" alt="What If — Explore the realities that could have been" width="100%" />
+<div align="center">
+
+<img src="./docs/assets/what-if-banner.png" alt="What If — Explore the realities that could have been" width="85%" />
 
 </div>
-
-<br />
-
-<div align="center">
 
 # WHAT IF
 
