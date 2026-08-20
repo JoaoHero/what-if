@@ -32,571 +32,874 @@ Discover what could happen next.
 
 ## What is What If?
 
-Most AI applications answer questions.
+**What If** is a platform for exploring one simple question:
 
-**What If explores consequences.**
+> **What would the world look like if one event had happened differently?**
 
-The user changes a single event from the real or fictional world:
+You choose a moment.
 
-> **What if Neymar had never been injured during the 2014 World Cup?**
+What If identifies where reality changes, understands what existed before that moment, and uses AI to simulate the consequences that could follow.
 
-What If identifies the **point of divergence**, analyzes the original context and generates a structured alternative timeline showing how that change could propagate through time.
+Instead of returning a wall of generated text, the result becomes an **interactive alternative timeline**.
+
+<br />
+
+### For example
+
+> **What if Neymar had not been injured during the 2014 World Cup?**
 
 ```text
-REALITY
-
-2014
-  │
-  │  Neymar gets injured
-  │
-  ▼
-Brazil loses its main player
-
-
-ALTERNATIVE REALITY
-
-2014
-  │
-  ●  POINT OF DIVERGENCE
-  │
-  ├──────── Neymar remains healthy
-  │
-  ▼
-Brazil reaches the next match
-  │
-  ▼
-New consequences emerge
-  │
-  ▼
-2015 ─── 2016 ─── 2017 ─── ...
+                        REAL HISTORY
+                             │
+                             │
+                    Brazil vs. Colombia
+                             │
+                             ▼
+                    Neymar gets injured
+                             │
+                             │
+                         July 2014
+                             │
+                    ● DIVERGENCE POINT
+                             │
+                             │
+            What if the injury never happened?
+                             │
+              ┌──────────────┴──────────────┐
+              │                             │
+              ▼                             ▼
+       Neymar remains fit          Brazil approaches the
+       for the semifinal           semifinal differently
+              │                             │
+              └──────────────┬──────────────┘
+                             ▼
+                    New consequences
+                             │
+                 2014 → 2015 → 2016 → ...
 ```
 
-The goal is not to predict what **would** have happened.
+The goal is **not to predict the future with certainty**.
 
-The goal is to explore what **could** have happened.
+The goal is to build a coherent simulation of a reality that **could have existed**.
 
 ---
 
-## The Experience
+## From a question to a reality
 
 The core experience is intentionally simple.
 
 ```mermaid
 flowchart LR
-    A["What if...?"] --> B["Understand scenario"]
-    B --> C["Find divergence"]
-    C --> D["Analyze context"]
-    D --> E["Generate consequences"]
-    E --> F["Build timeline"]
-    F --> G["Explore reality"]
+    A["💭 What if...?"] --> B["◎ Divergence"]
+    B --> C["◌ Context"]
+    C --> D["◇ Consequences"]
+    D --> E["◉ Timeline"]
+
+    style A fill:#f8f7ff,stroke:#8b5cf6,color:#111827
+    style B fill:#f4f7ff,stroke:#6366f1,color:#111827
+    style C fill:#f7f9ff,stroke:#818cf8,color:#111827
+    style D fill:#f5f3ff,stroke:#a78bfa,color:#111827
+    style E fill:#eef2ff,stroke:#6366f1,color:#111827
 ```
 
-The AI does not receive a prompt like:
+### 1. Ask
 
-> Write a story about this.
+The user starts with a single scenario.
 
-Instead, What If asks the model to reason about:
+```text
+What if the Roman Empire had never fallen?
+```
 
-* the original context;
-* the exact divergence point;
-* people and entities involved;
-* cause-and-effect relationships;
-* short and long-term consequences;
-* chronological consistency;
-* plausibility;
-* uncertainty;
-* historical facts versus speculation.
+### 2. Find the divergence
 
-The result is returned as structured data instead of free-form text.
+What If determines **where the alternative reality separates from the original one**.
+
+```text
+────────────── real history ──────────────●──────────────
+                                          │
+                                          │ divergence
+                                          ▼
+                                   alternative reality
+```
+
+### 3. Understand the context
+
+Before generating anything, the system considers the world around that event:
+
+* what had already happened;
+* who was involved;
+* political, cultural or economic context;
+* relationships between important actors;
+* constraints that still exist in the alternative reality.
+
+### 4. Simulate consequences
+
+The AI generates events that follow from previous events.
+
+Not:
+
+```text
+Random event
+Random event
+Random event
+```
+
+But:
+
+```text
+Event A
+   │
+   └── causes Event B
+                 │
+                 └── changes Event C
+                               │
+                               └── makes Event D possible
+```
+
+### 5. Explore
+
+The frontend transforms that structured output into a visual timeline that the user can navigate.
 
 ---
 
-# Timeline Engine
+# The Timeline
 
-Every generated reality is represented as a sequence of connected events.
+The timeline is the heart of What If.
+
+It represents the evolution of an alternative reality through connected events.
 
 ```text
-                     ┌── Event A
-                     │
-Reality ──●──────────┼── Event B ───── Event D
-          ▲          │
-          │          └── Event C
-          │
-    Divergence Point
+2014                  2015                  2016                  2017
+
+ ●─────────────────────●─────────────────────●─────────────────────●
+ │                     │                     │                     │
+ ▼                     ▼                     ▼                     ▼
+
+Divergence          Consequence          New scenario          Long-term
+point               emerges              develops              impact
 ```
 
-A timeline event may contain:
+Each event contains enough information for the interface to explain **what happened, why it happened and how plausible it is**.
 
 ```json
 {
   "date": "2014-07-08",
   "title": "Brazil reaches the World Cup final",
-  "description": "With Neymar available, Brazil approaches the semifinal differently...",
-  "impact": "The result changes the trajectory of the national team.",
-  "plausibility": 0.74,
-  "characters": ["Neymar", "Brazil National Team"],
+  "description": "With Neymar available, Brazil approaches the semifinal with a different attacking structure.",
+  "consequence": "The national team's trajectory changes for the remainder of the tournament.",
+  "plausibility": 0.72,
+  "characters": [
+    "Neymar",
+    "Brazil National Team"
+  ],
   "location": "Brazil"
 }
 ```
 
-This allows the frontend to render realities consistently instead of trying to interpret arbitrary AI-generated text.
+This structured format is important.
+
+The frontend does not need to interpret an unpredictable AI response. It receives data that can be validated and rendered consistently.
 
 ---
 
-## Plausibility
+# Reality vs. Speculation
 
-What If is not supposed to treat every generated event as equally likely.
-
-Each event can have an estimated level of plausibility.
+A key part of What If is knowing the difference between **what actually happened** and **what the AI is simulating**.
 
 ```text
-HIGH
+KNOWN REALITY
+
+✓ Brazil played Colombia on July 4, 2014
+✓ Neymar suffered a back injury
+✓ Neymar missed the semifinal
+
+
+POINT OF DIVERGENCE
+
+● Neymar does not suffer the injury
+
+
+SIMULATION
+
+◇ Neymar plays the semifinal
+◇ Brazil changes its tactical approach
+◇ Different results become possible
+```
+
+What If should never present generated events as historical facts.
+
+Everything after the divergence is a **simulation based on assumptions and context**.
+
+---
+
+# Plausibility
+
+Alternative history gets boring if every absurd possibility is treated as equally realistic.
+
+That's why generated events can receive a **plausibility score**.
+
+```text
+HIGH PLAUSIBILITY
 
 ████████████████░░░░  82%
 
-The consequence follows naturally from the
-divergence and known historical context.
+A consequence strongly supported by
+the context and previous events.
 ```
 
 ```text
-MEDIUM
+MEDIUM PLAUSIBILITY
 
-███████████░░░░░░░░░  58%
+███████████░░░░░░░░░  57%
 
-Possible, but dependent on additional assumptions.
+Possible, but dependent on additional
+assumptions.
 ```
 
 ```text
-LOW
+LOW PLAUSIBILITY
 
 ██████░░░░░░░░░░░░░░  31%
 
-Interesting scenario with higher uncertainty.
+A more speculative path with greater
+uncertainty.
 ```
 
-The objective is not mathematical prediction.
+The score is not a scientific probability.
 
-Plausibility exists to make the simulation more transparent and interesting.
+It exists to communicate **how speculative each part of the timeline is**.
 
 ---
 
-# Features
+# Why not just ask ChatGPT?
 
-### Alternative Timeline Generation
+You can already ask an LLM:
 
-Transform a single **"What if...?"** into a chronological alternative reality.
+> What if Neymar had not been injured in 2014?
 
----
+And receive a good answer.
 
-### Divergence Detection
+That is not what What If is trying to compete with.
 
-The system identifies the moment where the generated reality separates from the original one.
+The difference is the **experience and system built around the model**.
 
-```text
-Original reality ───────────●───────────────
-                            │
-                            └─────────────── Alternative reality
-                              divergence
-```
+| Generic AI chat                       | What If                                |
+| ------------------------------------- | -------------------------------------- |
+| Returns text                          | Builds a structured reality            |
+| Conversation based                    | Timeline based                         |
+| Context lives mostly in the prompt    | Context becomes application data       |
+| Events may be disconnected            | Events have causal relationships       |
+| No explicit divergence model          | Every reality starts from a divergence |
+| Speculation is mixed into prose       | Plausibility can be represented        |
+| Response disappears into chat history | Reality becomes an explorable object   |
+| AI is the product                     | AI powers the product                  |
 
----
+The model generates reasoning and content.
 
-### Structured AI Output
-
-AI responses are validated and transformed into predictable structures before reaching the frontend.
-
-```text
-User
-  ↓
-NestJS
-  ↓
-AI Provider
-  ↓
-Structured Output
-  ↓
-Validation
-  ↓
-Timeline
-  ↓
-Angular
-```
+**What If defines how that content becomes a world.**
 
 ---
 
-### Cause and Effect
+# The AI Pipeline
 
-Events are not generated as isolated pieces of text.
+A timeline should not be created with a single instruction like:
 
-Each consequence should exist because something before it happened.
+> Write an alternative history about this.
+
+The backend controls the generation process.
+
+```mermaid
+flowchart TD
+    A["User Scenario"] --> B["Scenario Analysis"]
+    B --> C["Identify Divergence"]
+    C --> D["Build Context"]
+    D --> E["Generate Timeline"]
+    E --> F["Validate Output"]
+    F --> G["Check Consistency"]
+    G --> H["Save Reality"]
+    H --> I["Render Timeline"]
+```
+
+A simplified generation process looks like this:
 
 ```text
-A changes
-   ↓
-B becomes possible
-   ↓
-C is affected
-   ↓
-D develops differently
+SCENARIO
+──────────────────────────────────────
+
+What if Neymar had not been injured
+during the 2014 World Cup?
+
+
+UNDERSTAND
+──────────────────────────────────────
+
+• What actually happened?
+• When does reality change?
+• Who is affected?
+• What constraints still exist?
+
+
+SIMULATE
+──────────────────────────────────────
+
+• Immediate consequences
+• Secondary consequences
+• Long-term consequences
+• Cause-and-effect relationships
+
+
+VALIDATE
+──────────────────────────────────────
+
+• Chronological order
+• Required fields
+• Contradictions
+• Plausibility
+• Structured output
+
+
+RESULT
+──────────────────────────────────────
+
+Alternative Timeline
 ```
 
 ---
 
-### AI Generated Visuals
+# Keeping the reality consistent
 
-Generated realities can also receive visual representations.
+One of the biggest problems with long AI-generated timelines is contradiction.
 
-For the MVP:
-
-```text
-Timeline
-   ↓
-Cover Image
-```
-
-Future versions may support:
+Imagine this:
 
 ```text
-Timeline
-   │
-   ├── Event ── Image
-   ├── Event ── Image
-   ├── Event ── Image
-   └── Event ── Image
+2015 → Neymar moves to Manchester City
+
+2017 → Neymar leaves Barcelona for PSG
 ```
 
----
+The second event contradicts the reality that was already created.
 
-### Reality Branches
+Sending the entire previous timeline to the model forever would work for a while, but becomes increasingly expensive and inefficient.
 
-Planned for a future version.
-
-Any generated event may become another divergence point.
+Instead, What If can progressively maintain a **structured reality state**.
 
 ```text
-                     Reality A
-                    /
-────────────●──────●
-            │       \
-            │        Reality B
-            │
-      First divergence
+REALITY STATE
+│
+├── Characters
+│   │
+│   └── Neymar
+│       ├── club: Manchester City
+│       ├── status: active
+│       └── national_team: Brazil
+│
+├── Important Events
+│   ├── Brazil won the 2014 World Cup
+│   └── Neymar joined Manchester City
+│
+├── Relationships
+│   └── ...
+│
+└── Constraints
+    └── Neymar cannot simultaneously
+        belong to another club
 ```
 
-Eventually, timelines become a navigable tree of alternate realities.
+Future generations can receive only the context relevant to the next events.
+
+This is one of the ideas that may eventually evolve into the **What If Engine**.
 
 ---
 
 # Architecture
 
-What If starts intentionally simple.
+The first version intentionally avoids unnecessary complexity.
 
 ```mermaid
-flowchart TD
-    U["User"] --> A["Angular"]
+flowchart LR
+    USER["User"] --> FRONT["Angular"]
+    FRONT --> API["NestJS API"]
 
-    A --> API["NestJS API"]
+    API --> DB[("MongoDB")]
+    API --> AIS["AI Service"]
+    API --> IMG["Image Service"]
 
-    API --> AI["AI Service"]
-    API --> DB["MongoDB"]
+    AIS --> PROVIDER["AI Provider"]
+    IMG --> IPROVIDER["Image Provider"]
 
-    AI --> P["AI Provider"]
-
-    P --> O["OpenAI"]
-
-    API --> IMG["Image Generation Service"]
-
-    IMG --> IP["Image Provider"]
+    PROVIDER --> OPENAI["OpenAI"]
 ```
 
-The backend does not depend directly on a specific AI provider.
+The application starts as a **modular monolith**.
 
-```text
-AIService
-   │
-   ▼
-AIProvider
-   │
-   ├── OpenAIProvider
-   │
-   ├── GeminiProvider
-   │
-   └── FutureProvider
-```
+No microservices.
 
-The same principle is used for image generation.
+No distributed infrastructure just because it looks good in an architecture diagram.
 
-```text
-ImageGenerationService
-   │
-   ▼
-ImageProvider
-```
-
-This keeps the application independent from any single AI company.
+The goal is to build the product first.
 
 ---
 
-# Project Structure
+# Provider abstraction
+
+What If should use AI providers without becoming permanently coupled to one of them.
 
 ```text
-what-if/
-│
-├── frontend/
-│   └── Angular
-│
-├── backend/
-│   └── NestJS
-│
-├── docs/
-│   ├── architecture/
-│   └── decisions/
-│
-├── README.md
-└── .gitignore
+AIService
+    │
+    ▼
+AIProvider
+    │
+    ├── OpenAIProvider
+    │
+    ├── GeminiProvider
+    │
+    └── ...
 ```
 
-As the project grows, domain boundaries can evolve without prematurely splitting the application into microservices.
+The same principle applies to image generation.
+
+```text
+ImageGenerationService
+        │
+        ▼
+   ImageProvider
+        │
+        ├── Provider A
+        ├── Provider B
+        └── ...
+```
+
+This allows models to be compared or replaced without rewriting the product's core logic.
 
 ---
 
 # Tech Stack
 
-| Layer          | Technology         |
-| -------------- | ------------------ |
-| Frontend       | Angular            |
-| Backend        | NestJS             |
-| Language       | TypeScript         |
-| Database       | MongoDB            |
-| AI             | OpenAI             |
-| Images         | AI Image Provider  |
-| Cache          | Redis *(planned)*  |
-| Queue          | BullMQ *(planned)* |
-| Storage        | AWS S3 *(planned)* |
-| Infrastructure | AWS *(future)*     |
+<div align="center">
+
+|    | Technology  | Responsibility                       |
+| -- | ----------- | ------------------------------------ |
+| 🎨 | **Angular** | Interface and timeline experience    |
+| ⚙️ | **NestJS**  | API and application rules            |
+| 🧠 | **OpenAI**  | Scenario reasoning and generation    |
+| 🍃 | **MongoDB** | Timelines and reality data           |
+| ⚡  | **Redis**   | Cache and rate limiting *(planned)*  |
+| 📬 | **BullMQ**  | Background jobs *(planned)*          |
+| ☁️ | **AWS**     | Production infrastructure *(future)* |
+
+</div>
+
+### Frontend
+
+```text
+Angular
+│
+├── Scenario input
+├── Loading experience
+├── Timeline visualization
+├── Event details
+├── Plausibility indicators
+└── Reality navigation
+```
+
+### Backend
+
+```text
+NestJS
+│
+├── Scenario validation
+├── Timeline generation
+├── AI orchestration
+├── Structured output validation
+├── Persistence
+├── Cost control
+└── Provider abstraction
+```
+
+### Database
+
+```text
+MongoDB
+│
+└── Timeline
+    ├── prompt
+    ├── title
+    ├── divergencePoint
+    ├── summary
+    ├── coverImage
+    ├── events[]
+    ├── metadata
+    └── createdAt
+```
 
 ---
 
-# Why MongoDB?
+# Project Structure
 
-A generated reality naturally behaves like a document.
+The repository starts simple.
+
+```text
+what-if/
+│
+├── frontend/
+│   └── Angular application
+│
+├── backend/
+│   └── NestJS application
+│
+├── docs/
+│   ├── assets/
+│   ├── architecture/
+│   └── decisions/
+│
+├── README.md
+└── LICENSE
+```
+
+As the product grows, features can be separated by domain without prematurely introducing microservices.
+
+---
+
+# MVP
+
+The first version has one job:
+
+<div align="center">
+
+### One **What if...?**
+
+↓
+
+### One alternative timeline.
+
+</div>
+
+<br />
+
+The MVP focuses on proving that exploring a generated reality is actually interesting.
+
+### Included
+
+* [ ] Scenario input
+* [ ] Divergence detection
+* [ ] Historical/context analysis
+* [ ] Structured AI generation
+* [ ] Chronological events
+* [ ] Plausibility
+* [ ] Timeline visualization
+* [ ] Timeline persistence
+* [ ] One generated cover image
+
+### Not included yet
+
+* Authentication
+* Profiles
+* Likes
+* Comments
+* Followers
+* Public feed
+* Complex branching
+* Microservices
+* Large cloud infrastructure
+
+Those features only matter if the core experience works.
+
+---
+
+# Roadmap
+
+## 01 — Generate a Reality
+
+```text
+What if...?
+    │
+    ▼
+Divergence
+    │
+    ▼
+Timeline
+```
+
+Build the first complete generation experience.
+
+---
+
+## 02 — Save Your Worlds
+
+Add:
+
+* authentication;
+* timeline history;
+* favorites;
+* sharing;
+* personal library.
+
+Users stop generating disposable responses and start building a collection of realities.
+
+---
+
+## 03 — Branch the Timeline
+
+This is where What If becomes much more interesting.
+
+Any event can become another divergence.
+
+```text
+                           Reality B
+                         /
+                        /
+Reality A ────────●────●──────── Reality C
+                  │
+                  │
+           divergence
+```
+
+The user could open an event and ask:
+
+> **What if this had happened differently?**
+
+That creates a new timeline connected to the previous one.
+
+---
+
+## 04 — Discover
+
+Public realities create a discovery layer.
+
+```text
+🔥 Popular
+
+🆕 Recent
+
+⭐ Most explored
+
+
+History     Sports      Movies
+
+Series      Games       Science
+
+Culture     Fiction
+```
+
+What If starts becoming a platform rather than only a generation tool.
+
+---
+
+## 05 — Community
+
+Users will eventually be able to interact around realities.
+
+* profiles;
+* likes;
+* comments;
+* followers;
+* creators;
+* notifications;
+* rankings;
+* shared timelines.
+
+---
+
+## 06 — What If Engine
+
+The long-term vision goes beyond generating text.
+
+A reality becomes a graph of entities and consequences.
+
+```text
+                        ┌───────────────┐
+                        │    EVENT      │
+                        └───────┬───────┘
+                                │
+                                ▼
+                        ┌───────────────┐
+                        │   DECISION    │
+                        └───────┬───────┘
+                                │
+                                ▼
+                      ┌───────────────────┐
+                      │    CONSEQUENCE    │
+                      └─────────┬─────────┘
+                                │
+                     ┌──────────┴──────────┐
+                     │                     │
+                     ▼                     ▼
+
+              ┌─────────────┐       ┌─────────────┐
+              │   EVENT A   │       │   EVENT B   │
+              └──────┬──────┘       └──────┬──────┘
+                     │                     │
+                     ▼                     ▼
+
+                 REALITY A             REALITY B
+```
+
+Instead of asking the AI to recreate everything every time, the application gradually understands:
+
+* events;
+* characters;
+* decisions;
+* relationships;
+* world state;
+* dependencies;
+* causal chains.
+
+Changing one event could then propagate through everything connected to it.
+
+That is the direction of the **What If Engine**.
+
+---
+
+# Images
+
+Images exist to strengthen the feeling that the user is exploring another world.
+
+For the MVP:
+
+```text
+Alternative Reality
+        │
+        ▼
+   Cover Image
+```
+
+Later:
 
 ```text
 Timeline
 │
-├── prompt
-├── title
-├── divergencePoint
-├── summary
+├── Event 01 ── Visual
 │
-├── events[]
-│   ├── date
-│   ├── title
-│   ├── description
-│   ├── impact
-│   └── plausibility
+├── Event 02 ── Visual
 │
-├── coverImage
-├── metadata
-└── createdAt
-```
-
-That structure maps naturally to MongoDB while leaving room for future timeline branching.
-
----
-
-# AI Pipeline
-
-Generating a timeline involves more than sending one prompt to a model.
-
-```mermaid
-flowchart LR
-    A["Scenario"] --> B["Normalize"]
-    B --> C["Historical Context"]
-    C --> D["Divergence Point"]
-    D --> E["Generate Events"]
-    E --> F["Validate Structure"]
-    F --> G["Check Consistency"]
-    G --> H["Persist Timeline"]
-```
-
-A simplified request might look like:
-
-```text
-SCENARIO
-
-What if Neymar had never been injured
-during the 2014 World Cup?
-
-
-TASK
-
-1. Identify the point of divergence.
-
-2. Consider the known context before the divergence.
-
-3. Generate plausible consequences.
-
-4. Preserve chronological consistency.
-
-5. Separate known facts from speculation.
-
-6. Estimate plausibility.
-
-7. Return structured JSON.
-```
-
----
-
-# Preventing Timeline Contradictions
-
-Long timelines introduce an important problem:
-
-> How does the AI remember what already happened?
-
-Instead of continuously sending the entire generated story back to the model, What If can maintain structured **world state**.
-
-```text
-Timeline Context
-
-Characters
-├── Neymar
-│   ├── club: Barcelona
-│   ├── status: active
-│   └── injuries: none
+├── Event 03 ── Visual
 │
-Events
-├── Brazil won semifinal
-├── Brazil reached final
-└── Neymar remained healthy
-│
-World State
-├── Brazil confidence increased
-└── tournament trajectory changed
+└── Event 04 ── Visual
 ```
 
-Future generations can receive the relevant state instead of the complete timeline.
-
-This is one of the first steps toward the **What If Engine**.
+Generation is abstracted behind an image provider so different models can be tested over time.
 
 ---
 
-# Development Roadmap
+# Scaling
 
-### Phase 01 — Timeline MVP
+The infrastructure should grow because **the product needs it**, not because the architecture diagram looks cooler.
 
-**One question → one alternative reality.**
-
-* [ ] What If input
-* [ ] Scenario interpretation
-* [ ] Divergence point detection
-* [ ] Structured timeline generation
-* [ ] Plausibility
-* [ ] Timeline visualization
-* [ ] Timeline persistence
-* [ ] Cover image generation
-
-No social network.
-
-No complex branching.
-
-No unnecessary infrastructure.
-
-The priority is validating whether exploring an alternative reality is actually fun.
-
----
-
-### Phase 02 — Personal Library
-
-* [ ] Authentication
-* [ ] Timeline history
-* [ ] Saved realities
-* [ ] Favorites
-* [ ] Sharing
-
----
-
-### Phase 03 — Branching Realities
-
-Users will be able to select an existing event and ask:
-
-> What if this happened differently?
+### Now
 
 ```text
-                       ┌──── Reality B
-                       │
-Reality A ─────●───────┤
-               │       │
-               │       └──── Reality C
-               │
-          New divergence
+Angular
+   │
+   ▼
+NestJS
+   │
+   ├──────── MongoDB
+   │
+   └──────── AI Provider
 ```
 
----
-
-### Phase 04 — Discovery
-
-Public realities and community content.
+### Later
 
 ```text
-Popular
-Recent
-Most explored
-
-History
-Sports
-Movies
-Series
-Games
-Science
-Culture
-Fiction
+                         ┌──── AI Worker
+                         │
+Angular ── NestJS ── BullMQ
+                         │
+                         └──── Image Worker
+                 │
+                 ├──── Redis
+                 │
+                 ├──── MongoDB
+                 │
+                 └──── AWS
+                       ├── S3
+                       ├── CloudFront
+                       ├── CloudWatch
+                       └── ECS / Fargate
 ```
 
----
+Redis may eventually support:
 
-### Phase 05 — Social Layer
-
-* [ ] Profiles
-* [ ] Followers
-* [ ] Likes
-* [ ] Comments
-* [ ] Rankings
-* [ ] Notifications
-* [ ] Creators
+* repeated scenario caching;
+* generation state;
+* rate limiting;
+* temporary context;
+* BullMQ jobs.
 
 ---
 
-### Phase 06 — What If Engine
+# Example Worlds
 
-The long-term vision.
+What If should work across completely different types of scenarios.
 
-Instead of treating timelines as generated text, the system starts representing them as a temporal graph.
+<table>
+<tr>
+<td width="50%">
+
+### ⚽ Sports
+
+> What if Neymar had not been injured during the 2014 World Cup?
+
+</td>
+<td width="50%">
+
+### 🏛️ History
+
+> What if the Roman Empire had never fallen?
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+### 🎬 Fiction
+
+> What if Mufasa had survived?
+
+</td>
+<td>
+
+### 🦸 Characters
+
+> What if Spider-Man had never been bitten?
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+### 🔬 Science
+
+> What if artificial intelligence had emerged in 1950?
+
+</td>
+<td>
+
+### 🌎 Humanity
+
+> What if we discovered intelligent extraterrestrial life tomorrow?
+
+</td>
+</tr>
+</table>
+
+Different subjects.
+
+Same fundamental idea:
 
 ```text
-EVENT
-  │
-  ▼
-CHARACTER
-  │
-  ▼
-DECISION
-  │
-  ▼
-CONSEQUENCE
-  │
-  ├─────────────┐
-  ▼             ▼
-EVENT          EVENT
-  │             │
-  ▼             ▼
-REALITY A     REALITY B
+Reality
+   │
+   ▼
+Change one thing
+   │
+   ▼
+Follow the consequences
 ```
-
-Changing one node may propagate consequences through the graph.
-
-At that point, What If becomes more than an AI application.
-
-It becomes a **narrative simulation engine**.
 
 ---
 
@@ -604,19 +907,22 @@ It becomes a **narrative simulation engine**.
 
 ## Requirements
 
-Make sure you have installed:
+You'll need:
 
-* Node.js
-* npm
-* Angular CLI
-* MongoDB
+```text
+Node.js
+npm
+Angular CLI
+MongoDB
+```
 
 ---
 
-## Clone
+## Clone the repository
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
+git clone <repository-url>
+
 cd what-if
 ```
 
@@ -626,31 +932,37 @@ cd what-if
 
 ```bash
 cd backend
+
 npm install
+
 npm run start:dev
 ```
 
-Create a `.env` file:
+Create your environment file:
 
 ```env
 PORT=3000
 
 MONGODB_URI=mongodb://localhost:27017/what-if
 
-OPENAI_API_KEY=your_openai_api_key
+OPENAI_API_KEY=your_key_here
 ```
 
 ---
 
 ## Frontend
 
+Open another terminal:
+
 ```bash
 cd frontend
+
 npm install
+
 ng serve
 ```
 
-Then open:
+The Angular application will be available at:
 
 ```text
 http://localhost:4200
@@ -658,127 +970,57 @@ http://localhost:4200
 
 ---
 
-# Future Infrastructure
+# Principles
 
-Infrastructure should grow with usage.
+The project follows a few simple principles.
 
-Not with the architecture diagram.
+### Product before infrastructure
 
-### MVP
+Don't build distributed systems for users that don't exist yet.
 
-```text
-Angular
-   │
-NestJS
-   │
-├── MongoDB
-└── AI Provider
-```
+### Structure before prompt size
 
-### Scale
+Don't solve AI memory by endlessly increasing context.
 
-```text
-                         ┌── AI Worker
-                         │
-Angular → NestJS → Redis + BullMQ
-                         │
-                         └── Image Worker
+### AI is a component
 
-MongoDB
+The application should remain valuable even when the underlying model changes.
 
-AWS
-├── S3
-├── CloudFront
-├── CloudWatch
-├── Lambda
-└── ECS / Fargate
-```
+### Cause before spectacle
 
-Redis can eventually be used for:
+Interesting consequences should come from previous events, not random surprises.
 
-* identical scenario caching;
-* AI request rate limiting;
-* temporary generation states;
-* distributed jobs;
-* BullMQ.
+### Uncertainty should be visible
 
----
+Generated speculation should never look like historical truth.
 
-# Example Scenarios
+### The interface matters
 
-```text
-What if Neymar had never been injured in 2014?
-```
+What If should feel like exploring another reality.
 
-```text
-What if Mufasa had survived?
-```
-
-```text
-What if the Roman Empire had never fallen?
-```
-
-```text
-What if Spider-Man had never been bitten?
-```
-
-```text
-What if artificial intelligence had been created in 1950?
-```
-
-```text
-What if humanity discovered intelligent life tomorrow?
-```
-
-Every question creates a new point of divergence.
-
-Every divergence creates another possible world.
-
----
-
-# Design Philosophy
-
-What If should never feel like:
-
-```text
-Chat
- ↓
-AI writes text
- ↓
-Done
-```
-
-It should feel like:
-
-```text
-            REALITY
-               │
-               ●
-              / \
-             /   \
-            /     \
-           ▼       ▼
-      POSSIBILITY POSSIBILITY
-           │       │
-           ▼       ▼
-        CONSEQUENCES
-```
-
-The interface exists to make users feel like they are **navigating a reality**, not reading an AI response.
+Not chatting with a bot.
 
 ---
 
 <div align="center">
 
-## One event.
+<br />
 
-## Infinite consequences.
+### REALITY IS JUST ONE PATH.
+
+# WHAT IF IT HAD TAKEN ANOTHER?
 
 <br />
 
-### WHAT IF?
+**Explore the realities that could have been.**
 
-*Explore the realities that could have been.*
+<br />
+
+`Ask.`    `Diverge.`    `Explore.`
+
+<br />
+
+</div>
 
 </div>
 
