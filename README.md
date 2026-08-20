@@ -18,6 +18,8 @@ Discover what could happen next.
 ![OpenAI](https://img.shields.io/badge/AI-OpenAI-0F172A?style=flat-square\&logo=openai\&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-MVP-7C3AED?style=flat-square)
 
+<br />
+
 <div align="center">
 
 <img src="./docs/assets/what-if-banner.png" alt="What If — Explore the realities that could have been" width="85%" />
